@@ -16,12 +16,24 @@ export default function Results() {
   const { data, isLoading } = useSessionDetails(sessionId || null);
   const [showStars, setShowStars] = useState(false);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number | null>(null);
+  const [partialQuestionIds, setPartialQuestionIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (data) {
       setTimeout(() => setShowStars(true), 500);
     }
   }, [data]);
+  
+  // Load partial credit info from sessionStorage
+  useEffect(() => {
+    if (sessionId) {
+      const partialKey = `partial_${sessionId}`;
+      const stored = sessionStorage.getItem(partialKey);
+      if (stored) {
+        setPartialQuestionIds(JSON.parse(stored));
+      }
+    }
+  }, [sessionId]);
 
   if (isLoading || !data) {
     return (
@@ -117,6 +129,7 @@ export default function Results() {
                   question={question}
                   attempt={attempt}
                   questionNumber={index + 1}
+                  isPartial={partialQuestionIds.includes(question.id || '')}
                 />
               </div>
             );

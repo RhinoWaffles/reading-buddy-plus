@@ -46,6 +46,7 @@ export interface Attempt {
   question_id: string;
   child_answer: string;
   is_correct: boolean;
+  is_partial?: boolean; // For short answers with partial credit
   seconds_spent: number;
   created_at?: string;
 }

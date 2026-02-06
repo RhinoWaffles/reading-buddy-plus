@@ -6,6 +6,7 @@ interface ResultCardProps {
   question: Question;
   attempt: Attempt;
   questionNumber: number;
+  isPartial?: boolean;
 }
 
 const questionTypeLabels: Record<string, string> = {
@@ -15,22 +16,29 @@ const questionTypeLabels: Record<string, string> = {
   mcq_vocab: '📝 Vocabulary',
 };
 
-export function ResultCard({ question, attempt, questionNumber }: ResultCardProps) {
+export function ResultCard({ question, attempt, questionNumber, isPartial = false }: ResultCardProps) {
   const isCorrect = attempt.is_correct;
+  const showAsSuccess = isCorrect; // Partial counts as success
 
   return (
     <div className={cn(
       'rounded-2xl p-5 border-2 transition-all',
-      isCorrect 
-        ? 'bg-success/10 border-success/30' 
+      showAsSuccess 
+        ? isPartial 
+          ? 'bg-accent/10 border-accent/30' 
+          : 'bg-success/10 border-success/30' 
         : 'bg-destructive/10 border-destructive/30'
     )}>
       <div className="flex items-start gap-4">
         <div className={cn(
           'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0',
-          isCorrect ? 'bg-success text-success-foreground' : 'bg-destructive text-destructive-foreground'
+          showAsSuccess 
+            ? isPartial
+              ? 'bg-accent text-accent-foreground'
+              : 'bg-success text-success-foreground' 
+            : 'bg-destructive text-destructive-foreground'
         )}>
-          {isCorrect ? <Check className="w-6 h-6" /> : <X className="w-6 h-6" />}
+          {showAsSuccess ? <Check className="w-6 h-6" /> : <X className="w-6 h-6" />}
         </div>
         
         <div className="flex-1 min-w-0">
@@ -50,14 +58,23 @@ export function ResultCard({ question, attempt, questionNumber }: ResultCardProp
               <span className="font-medium text-muted-foreground">Your answer: </span>
               <span className={cn(
                 'font-semibold',
-                isCorrect ? 'text-success' : 'text-destructive'
+                showAsSuccess ? (isPartial ? 'text-accent' : 'text-success') : 'text-destructive'
               )}>
                 {attempt.child_answer}
               </span>
             </p>
             
-            {/* For correct short answers, show encouraging message with model sentence */}
-            {isCorrect && question.question_type === 'short_answer' && (
+            {/* For partial credit short answers */}
+            {isPartial && question.question_type === 'short_answer' && (
+              <p className="text-accent">
+                <span className="font-medium">Good thinking! </span>
+                <span className="text-muted-foreground">A more complete answer could be: </span>
+                <span className="font-semibold text-foreground">"{question.correct_answer}"</span>
+              </p>
+            )}
+            
+            {/* For fully correct short answers */}
+            {isCorrect && !isPartial && question.question_type === 'short_answer' && (
               <p className="text-success">
                 <span className="font-medium">Nice job! </span>
                 <span className="text-muted-foreground">A complete sentence could be: </span>
