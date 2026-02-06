@@ -12,7 +12,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 0,
         question_type: "mcq_main_idea",
-        prompt: "What is the main idea of this story?",
+        prompt: "What is this story mostly about?",
         choices: [
           "Foxes like to sleep in the morning",
           "Using your brain can help you solve problems",
@@ -76,7 +76,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 0,
         question_type: "mcq_main_idea",
-        prompt: "What is this passage mostly about?",
+        prompt: "What is this story mostly about?",
         choices: [
           "How to make honey at home",
           "Why queens are important",
@@ -116,7 +116,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 3,
         question_type: "mcq_vocab",
-        prompt: "In the passage, what does 'nectar' mean?",
+        prompt: "In the story, what does 'nectar' mean?",
         choices: [
           "A type of leaf",
           "Sweet liquid from flowers",
@@ -204,7 +204,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 0,
         question_type: "mcq_main_idea",
-        prompt: "What is this passage mainly about?",
+        prompt: "What is this story mainly about?",
         choices: [
           "Why oceans are so big",
           "How water moves in a cycle on Earth",
@@ -244,7 +244,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 3,
         question_type: "mcq_vocab",
-        prompt: "What is 'water vapor' in the passage?",
+        prompt: "What is 'water vapor' in the story?",
         choices: [
           "Very cold water",
           "Water that is invisible gas",
@@ -332,7 +332,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 0,
         question_type: "mcq_main_idea",
-        prompt: "What is this passage mostly about?",
+        prompt: "What is this story mostly about?",
         choices: [
           "How to catch fish in the ocean",
           "Why Antarctica is cold",
@@ -372,7 +372,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 3,
         question_type: "mcq_vocab",
-        prompt: "In the passage, what does 'survive' mean?",
+        prompt: "In the story, what does 'survive' mean?",
         choices: [
           "To have a party",
           "To stay alive and healthy",
@@ -460,7 +460,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 0,
         question_type: "mcq_main_idea",
-        prompt: "What is this passage mainly about?",
+        prompt: "What is this story mainly about?",
         choices: [
           "The Golden Gate Bridge story",
           "Why rivers are hard to cross",
@@ -588,7 +588,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 0,
         question_type: "mcq_main_idea",
-        prompt: "What is this passage mainly about?",
+        prompt: "What is this story mainly about?",
         choices: [
           "Why dogs make the best pets",
           "How horses are trained",
@@ -628,7 +628,7 @@ export const SEEDED_SESSIONS: GeneratedSession[] = [
       {
         order_index: 3,
         question_type: "mcq_vocab",
-        prompt: "What does 'alert' mean in this passage?",
+        prompt: "What does 'alert' mean in this story?",
         choices: [
           "To make someone fall asleep",
           "To warn or notify someone about something",

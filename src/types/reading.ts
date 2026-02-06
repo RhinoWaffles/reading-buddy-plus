@@ -81,7 +81,7 @@ export interface GeneratedSession {
 }
 
 export const SKILL_CATEGORIES: Record<SkillCategory, { name: string; description: string; icon: string }> = {
-  A: { name: 'Fiction & Nonfiction', description: 'Different types of passages', icon: '📚' },
+  A: { name: 'Fiction & Nonfiction', description: 'Different types of stories', icon: '📚' },
   B: { name: 'Main Idea & Structure', description: 'Understanding the big picture', icon: '🎯' },
   C: { name: 'Key Ideas & Details', description: 'Finding important information', icon: '🔍' },
   D: { name: 'Knowledge & Ideas', description: 'Connecting what you learn', icon: '💡' },

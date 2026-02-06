@@ -91,7 +91,7 @@ export default function Dashboard() {
           <div className="bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-6 shadow-card text-primary-foreground flex flex-col justify-center">
             <h3 className="text-xl font-bold mb-2">5 Minute Reading Session</h3>
             <p className="text-primary-foreground/80 mb-6">
-              Read a passage and answer 4 questions to practice your skills!
+              Read a story and answer 4 questions to practice your skills!
             </p>
             <Button
               onClick={() => navigate('/session')}
@@ -135,7 +135,7 @@ export default function Dashboard() {
                     <div>
                       <h4 className="font-semibold text-foreground">{session.passage_title}</h4>
                       <p className="text-sm text-muted-foreground">
-                        {session.passage_type === 'fiction' ? '📖' : '📚'} {session.passage_type} • 
+                        {session.passage_type === 'fiction' ? '📖 Fiction' : '📚 Nonfiction'} • 
                         {session.completed_at ? ` ${session.correct_count}/${session.total_questions} correct` : ' In progress...'}
                       </p>
                     </div>
