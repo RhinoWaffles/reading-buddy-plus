@@ -118,6 +118,7 @@ export default function Session() {
     const secondsSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
     
     let isCorrect: boolean;
+    let isPartial = false;
     
     // For short answer questions, use semantic grading
     if (question.question_type === 'short_answer') {
@@ -130,7 +131,12 @@ export default function Session() {
           }
         });
         
-        isCorrect = !error && data?.is_correct === true;
+        if (!error && data) {
+          isCorrect = data.is_correct === true;
+          isPartial = data.is_partial === true;
+        } else {
+          isCorrect = false;
+        }
       } catch (e) {
         console.error('Grading failed, falling back to simple match:', e);
         // Fallback: check if key words are present
@@ -138,18 +144,21 @@ export default function Session() {
         const correctWords = question.correct_answer.toLowerCase().split(/\s+/);
         const keyWords = correctWords.filter(w => w.length > 3);
         const matchCount = keyWords.filter(w => childWords.some(cw => cw.includes(w) || w.includes(cw))).length;
-        isCorrect = matchCount >= Math.ceil(keyWords.length * 0.5);
+        const ratio = matchCount / Math.max(keyWords.length, 1);
+        isCorrect = ratio >= 0.4;
+        isPartial = ratio >= 0.4 && ratio < 0.7;
       }
     } else {
       // For MCQ, use exact matching
       isCorrect = answer.toLowerCase().trim() === question.correct_answer.toLowerCase().trim();
     }
 
+    // Partial credit counts as correct for progress/streaks
     if (isCorrect) {
       setCorrectCount(prev => prev + 1);
     }
 
-    // Submit the attempt
+    // Submit the attempt (store partial flag in localStorage for now since DB doesn't have column)
     await submitAttempt.mutateAsync({
       session_id: currentSessionId,
       question_id: question.id!,
@@ -157,6 +166,14 @@ export default function Session() {
       is_correct: isCorrect,
       seconds_spent: secondsSpent,
     });
+    
+    // Store partial credit info in sessionStorage for results page
+    if (isPartial) {
+      const partialKey = `partial_${currentSessionId}`;
+      const existing = JSON.parse(sessionStorage.getItem(partialKey) || '[]');
+      existing.push(question.id);
+      sessionStorage.setItem(partialKey, JSON.stringify(existing));
+    }
 
     // Move to next question or complete
     if (currentQuestionIndex < questions.length - 1) {
