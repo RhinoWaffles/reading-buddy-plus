@@ -97,8 +97,8 @@ export default function Results() {
         <div className="mb-6">
           <p className="text-sm text-muted-foreground mb-3">
             {selectedQuestionIndex !== null 
-              ? '👆 Evidence highlighted for the selected question'
-              : '👇 Click a question to see evidence in the passage'
+              ? '👆 Where the answer shows up in the story'
+              : '👇 Click a question to see where the answer is in the story'
             }
           </p>
           <PassageDisplay

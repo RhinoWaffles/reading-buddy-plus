@@ -89,7 +89,7 @@ export function PassageDisplay({
               ? 'bg-skill-a/20 text-skill-a' 
               : 'bg-skill-b/20 text-skill-b'
           }`}>
-            {passageType === 'fiction' ? '📖 Fiction' : '📚 Nonfiction'}
+            {passageType === 'fiction' ? '📖 Fiction Story' : '📚 Nonfiction Story'}
           </span>
           <h2 className="text-2xl font-bold text-foreground">{title}</h2>
         </div>

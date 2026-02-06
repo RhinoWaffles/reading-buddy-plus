@@ -21,7 +21,9 @@ serve(async (req) => {
 
     const { difficulty = "normal" } = await req.json();
 
-    const systemPrompt = `You are an expert educational content creator for Grade 3 reading comprehension. Generate original, engaging passages with questions similar to Spectrum Reading workbooks.
+    const systemPrompt = `You are an expert educational content creator for Grade 3 reading comprehension. Generate original, engaging stories with questions similar to Spectrum Reading workbooks.
+
+IMPORTANT: Use the word "story" instead of "passage" in all student-facing question prompts.
 
 Return ONLY valid JSON with this exact structure:
 {
@@ -34,7 +36,7 @@ Return ONLY valid JSON with this exact structure:
     {
       "order_index": 0,
       "question_type": "mcq_main_idea",
-      "prompt": "What is the main idea of this passage?",
+      "prompt": "What is this story mostly about?",
       "choices": ["option1", "option2", "option3", "option4"],
       "correct_answer": "exact match of correct choice",
       "explanation": "1-2 sentence explanation",
@@ -64,7 +66,7 @@ Return ONLY valid JSON with this exact structure:
     {
       "order_index": 3,
       "question_type": "mcq_vocab",
-      "prompt": "What does '[word from passage]' mean?",
+      "prompt": "What does '[word from story]' mean in this story?",
       "choices": ["option1", "option2", "option3", "option4"],
       "correct_answer": "exact match",
       "explanation": "explanation",
@@ -74,7 +76,7 @@ Return ONLY valid JSON with this exact structure:
   ]
 }
 
-Skill categories: A=Fiction/Nonfiction passages, B=Main Idea/Structure, C=Key Details, D=Knowledge Integration
+Skill categories: A=Fiction/Nonfiction stories, B=Main Idea/Structure, C=Key Details, D=Knowledge Integration
 
 ${difficulty === "easy" ? "Use simpler vocabulary and shorter sentences. Make clues more direct." : ""}
 ${difficulty === "hard" ? "Include mild inference questions and slightly richer vocabulary." : ""}`;
@@ -89,7 +91,7 @@ ${difficulty === "hard" ? "Include mild inference questions and slightly richer 
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: "Generate a new original reading passage with 4 questions. Return only the JSON." }
+          { role: "user", content: "Generate a new original reading story with 4 questions. Return only the JSON." }
         ],
         temperature: 0.8,
       }),
@@ -122,7 +124,7 @@ ${difficulty === "hard" ? "Include mild inference questions and slightly richer 
     });
   } catch (error) {
     console.error("Error:", error);
-    return new Response(JSON.stringify({ error: "Failed to generate passage" }), {
+    return new Response(JSON.stringify({ error: "Failed to generate story" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

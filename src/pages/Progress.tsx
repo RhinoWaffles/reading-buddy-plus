@@ -130,7 +130,7 @@ export default function Progress() {
                     <div>
                       <h4 className="font-semibold text-foreground">{session.passage_title}</h4>
                       <p className="text-sm text-muted-foreground">
-                        {session.passage_type === 'fiction' ? '📖' : '📚'} {session.passage_type} • 
+                        {session.passage_type === 'fiction' ? '📖 Fiction' : '📚 Nonfiction'} • 
                         {session.created_at && format(parseISO(session.created_at), ' MMM d, h:mm a')}
                       </p>
                     </div>
