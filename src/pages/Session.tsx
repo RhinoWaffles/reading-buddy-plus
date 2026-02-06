@@ -115,8 +115,35 @@ export default function Session() {
     if (!currentSessionId || !questions[currentQuestionIndex]) return;
 
     const question = questions[currentQuestionIndex];
-    const isCorrect = answer.toLowerCase().trim() === question.correct_answer.toLowerCase().trim();
     const secondsSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+    
+    let isCorrect: boolean;
+    
+    // For short answer questions, use semantic grading
+    if (question.question_type === 'short_answer') {
+      try {
+        const { data, error } = await supabase.functions.invoke('grade-short-answer', {
+          body: {
+            childAnswer: answer,
+            correctAnswer: question.correct_answer,
+            question: question.prompt,
+          }
+        });
+        
+        isCorrect = !error && data?.is_correct === true;
+      } catch (e) {
+        console.error('Grading failed, falling back to simple match:', e);
+        // Fallback: check if key words are present
+        const childWords = answer.toLowerCase().split(/\s+/);
+        const correctWords = question.correct_answer.toLowerCase().split(/\s+/);
+        const keyWords = correctWords.filter(w => w.length > 3);
+        const matchCount = keyWords.filter(w => childWords.some(cw => cw.includes(w) || w.includes(cw))).length;
+        isCorrect = matchCount >= Math.ceil(keyWords.length * 0.5);
+      }
+    } else {
+      // For MCQ, use exact matching
+      isCorrect = answer.toLowerCase().trim() === question.correct_answer.toLowerCase().trim();
+    }
 
     if (isCorrect) {
       setCorrectCount(prev => prev + 1);
