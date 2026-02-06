@@ -56,6 +56,16 @@ export function ResultCard({ question, attempt, questionNumber }: ResultCardProp
               </span>
             </p>
             
+            {/* For correct short answers, show encouraging message with model sentence */}
+            {isCorrect && question.question_type === 'short_answer' && (
+              <p className="text-success">
+                <span className="font-medium">Nice job! </span>
+                <span className="text-muted-foreground">A complete sentence could be: </span>
+                <span className="font-semibold text-foreground">"{question.correct_answer}"</span>
+              </p>
+            )}
+            
+            {/* For incorrect answers, show the correct answer */}
             {!isCorrect && (
               <p>
                 <span className="font-medium text-muted-foreground">Correct answer: </span>
