@@ -76,8 +76,8 @@ export function ResultCard({ question, attempt, questionNumber, isPartial = fals
             {/* For fully correct short answers */}
             {isCorrect && !isPartial && question.question_type === 'short_answer' && (
               <p className="text-success">
-                <span className="font-medium">Nice job! </span>
-                <span className="text-muted-foreground">A complete sentence could be: </span>
+                <span className="font-medium">Great thinking! </span>
+                <span className="text-muted-foreground">Here's one way to write it: </span>
                 <span className="font-semibold text-foreground">"{question.correct_answer}"</span>
               </p>
             )}

@@ -42,17 +42,32 @@ Return "full" if the student's answer:
 - Contains the correct main idea or key concept
 - Shows clear understanding, even if phrased differently
 - Has grammar, spelling, or capitalization errors but the idea is right
+- Uses different words but expresses the same meaning
+- Is shorter or paraphrased but captures the core idea
+- Omits descriptive words but keeps the essential cause/outcome
+
+SPECIAL RULE FOR "WHY" QUESTIONS:
+For questions asking "why" something happened, grade based on MEANING not exact wording:
+- If the student correctly identifies the CAUSE and OUTCOME, mark as "full"
+- Accept paraphrasing, shorter sentences, and different vocabulary
+- Example: If model answer is "he felt proud because his hard work helped the tiny seed grow into a very large plant"
+  Accept: "because his hard work helped something so small grow so big" as FULL credit
+- Focus on whether the student understood WHY, not how they worded it
 
 Return "partial" if the student's answer:
 - Shows some understanding but is incomplete
 - Mentions relevant details but misses the main point
 - Is on the right track but needs more explanation
 - Has the right idea but is too vague
+- Gets part of the cause/outcome but not both
 
 Return "incorrect" only if:
 - The answer is factually wrong
 - The answer shows misunderstanding of the question
 - The answer is completely off-topic or nonsensical
+- The cause or outcome stated is incorrect
+
+BE GENEROUS: When in doubt between "full" and "partial", choose "full" if the core idea is there.
 
 Return ONLY valid JSON: {"grade": "full"} or {"grade": "partial"} or {"grade": "incorrect"}`;
 
