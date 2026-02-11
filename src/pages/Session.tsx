@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { PassageDisplay } from '@/components/reading/PassageDisplay';
 import { QuestionCard } from '@/components/reading/QuestionCard';
+import { WordDetective } from '@/components/reading/WordDetective';
+import type { WordDetectiveQuestion } from '@/components/reading/WordDetective';
 import { Button } from '@/components/ui/button';
 import { useSessions, useSubmitAttempt } from '@/hooks/useSessions';
 import { useDailyStats } from '@/hooks/useDailyStats';
@@ -12,7 +14,34 @@ import type { Question, GeneratedSession, EvidenceSpan } from '@/types/reading';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-type SessionPhase = 'loading' | 'reading' | 'questions' | 'complete';
+type SessionPhase = 'loading' | 'reading' | 'questions' | 'word_detective' | 'complete';
+
+// Generate simple word detective questions from passage text as fallback
+function generateFallbackWordDetective(text: string): WordDetectiveQuestion[] {
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+  if (sentences.length < 2) return [];
+  const items: WordDetectiveQuestion[] = [];
+  const shortSentences = sentences
+    .map(s => s.trim())
+    .filter(s => s.split(/\s+/).length >= 4 && s.split(/\s+/).length <= 15)
+    .slice(0, 4);
+  for (const sentence of shortSentences) {
+    const words = sentence.split(/\s+/).map(w => w.replace(/[.,!?;:"']/g, ''));
+    const verbWord = words.find(w =>
+      w.length > 3 && (/ed$/.test(w) || /ing$/.test(w)) && /^[a-z]/i.test(w)
+    );
+    if (verbWord && items.length < 2) {
+      items.push({
+        sentence,
+        prompt: 'Which word shows an action in this sentence?',
+        target_word: verbWord.toLowerCase(),
+        word_type: 'verb',
+        feedback: 'This word tells us what someone or something does!',
+      });
+    }
+  }
+  return items.slice(0, 2);
+}
 
 export default function Session() {
   const navigate = useNavigate();
@@ -29,6 +58,7 @@ export default function Session() {
   const [startTime] = useState(Date.now());
   const questionStartTime = useRef(Date.now());
   const [correctCount, setCorrectCount] = useState(0);
+  const [wordDetectiveQuestions, setWordDetectiveQuestions] = useState<WordDetectiveQuestion[]>([]);
 
   // Generate or pick a session on mount
   useEffect(() => {
@@ -45,8 +75,14 @@ export default function Session() {
       });
 
       if (!error && data?.passage_title) {
-        setSessionData(data as GeneratedSession);
-        await saveAndStartSession(data as GeneratedSession);
+        const genData = data as GeneratedSession;
+        setSessionData(genData);
+        if (genData.word_detective) {
+          setWordDetectiveQuestions(genData.word_detective as WordDetectiveQuestion[]);
+        } else {
+          setWordDetectiveQuestions(generateFallbackWordDetective(genData.passage_text));
+        }
+        await saveAndStartSession(genData);
         return;
       }
     } catch (e) {
@@ -60,6 +96,7 @@ export default function Session() {
     
     const randomSession = sessionPool[Math.floor(Math.random() * sessionPool.length)];
     setSessionData(randomSession);
+    setWordDetectiveQuestions(generateFallbackWordDetective(randomSession.passage_text));
     await saveAndStartSession(randomSession);
   };
 
@@ -179,6 +216,8 @@ export default function Session() {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       questionStartTime.current = Date.now();
+    } else if (wordDetectiveQuestions.length > 0) {
+      setPhase('word_detective');
     } else {
       await completeSession();
     }
@@ -251,8 +290,19 @@ export default function Session() {
           </div>
         )}
 
+        {/* Word Detective progress */}
+        {phase === 'word_detective' && (
+          <div className="mb-6">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-sm font-semibold text-accent-foreground bg-accent/30 px-3 py-1 rounded-full">
+                🔍 Bonus: Word Detective!
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Passage Display */}
-        {sessionData && (
+        {sessionData && phase !== 'word_detective' && (
           <PassageDisplay
             title={sessionData.passage_title}
             text={sessionData.passage_text}
@@ -281,6 +331,16 @@ export default function Session() {
               questionNumber={currentQuestionIndex + 1}
               onAnswer={handleAnswer}
               disabled={submitAttempt.isPending}
+            />
+          </div>
+        )}
+
+        {/* Word Detective Phase */}
+        {phase === 'word_detective' && (
+          <div className="mt-6">
+            <WordDetective
+              questions={wordDetectiveQuestions}
+              onComplete={() => completeSession()}
             />
           </div>
         )}

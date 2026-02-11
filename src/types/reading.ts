@@ -71,6 +71,14 @@ export interface DailyStats {
   streak: number;
 }
 
+export interface WordDetectiveItem {
+  sentence: string;
+  prompt: string;
+  target_word: string;
+  word_type: 'noun' | 'verb' | 'adjective' | 'conjunction';
+  feedback: string;
+}
+
 export interface GeneratedSession {
   passage_title: string;
   passage_text: string;
@@ -78,6 +86,7 @@ export interface GeneratedSession {
   primary_skill_category: SkillCategory;
   reading_level: ReadingLevel;
   questions: Omit<Question, 'id' | 'session_id'>[];
+  word_detective?: WordDetectiveItem[];
 }
 
 export const SKILL_CATEGORIES: Record<SkillCategory, { name: string; description: string; icon: string }> = {
