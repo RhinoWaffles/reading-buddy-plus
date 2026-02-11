@@ -73,10 +73,34 @@ Return ONLY valid JSON with this exact structure:
       "hint": null,
       "evidence_spans": [{"start": 20, "end": 40}]
     }
+  ],
+  "word_detective": [
+    {
+      "sentence": "A short sentence from the story.",
+      "prompt": "Which word shows an action?",
+      "target_word": "the_word",
+      "word_type": "verb",
+      "feedback": "This word tells us what someone does!"
+    },
+    {
+      "sentence": "Another sentence from the story.",
+      "prompt": "Which word describes something?",
+      "target_word": "the_word",
+      "word_type": "adjective",
+      "feedback": "That word tells us more about the noun."
+    }
   ]
 }
 
 Skill categories: A=Fiction/Nonfiction stories, B=Main Idea/Structure, C=Key Details, D=Knowledge Integration
+
+WORD DETECTIVE RULES:
+- Pick 2-3 short sentences directly from the story text
+- Ask meaning-based questions: "Which word shows an action?", "Which word names a thing?", "Which word describes something?", "Which word connects two ideas?"
+- word_type must be one of: noun, verb, adjective, conjunction
+- target_word must be a single word that appears in the sentence
+- Keep feedback playful: "Nice spotting!", "That word tells us more about the noun.", "This word connects two ideas."
+- Avoid technical grammar definitions
 
 ${difficulty === "easy" ? "Use simpler vocabulary and shorter sentences. Make clues more direct." : ""}
 ${difficulty === "hard" ? "Include mild inference questions and slightly richer vocabulary." : ""}`;
